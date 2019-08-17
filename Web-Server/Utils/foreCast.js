@@ -9,7 +9,7 @@ const foreCast = (latitude, longitude, callback) => {
       } else if(body.error){
           callback('Invalid Query', undefined)
       } else{
-          callback(undefined, `${body.daily.data[0].summary} It is currently ${body.hourly.data[0].temperature}`)
+          callback(undefined, `${body.daily.data[0].summary} It is currently ${body.hourly.data[0].temperature}, Today's High is: ${body.daily.data[0].temperatureHigh} and Low is: ${body.daily.data[0].temperatureLow}`)
       }
      })
 }
