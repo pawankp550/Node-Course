@@ -5,6 +5,8 @@ const foreCast = require('../Utils/foreCast')
 const geoCode = require('../Utils/geoCode')
 
 const app = express()
+const PORT = process.env.PORT || 3000
+
 const publicDirPath = path.join(__dirname, '../public')
 const viewDirPath = path.join(__dirname, '../Templates/views')
 const partialDirPath = path.join(__dirname, '../Templates/partials')
@@ -78,6 +80,6 @@ app.get('*', (req, res) => {
     })
 })
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
     console.log('Server Started')
 })
