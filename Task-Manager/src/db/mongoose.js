@@ -1,6 +1,4 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
-const validator = require('validator')
 
 mongoose.connect('mongodb+srv://User:Mongo@12345@cluster0-d2yun.mongodb.net/test?retryWrites=true&w=majority',
 {
@@ -9,33 +7,33 @@ mongoose.connect('mongodb+srv://User:Mongo@12345@cluster0-d2yun.mongodb.net/test
     dbName: 'Task-Manager-Api'
 })
 
-const Task = mongoose.model('task', {
-    description: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    completed: {
-        type: Boolean,
-        default: false
-    }
-})
+// const Task = mongoose.model('task', {
+//     description: {
+//         type: String,
+//         required: true,
+//         trim: true
+//     },
+//     completed: {
+//         type: Boolean,
+//         default: false
+//     }
+// })
 
 // const t1 = new Task({
 //     description: 'Wash Bike'
 // })
 
-const t2 = new Task({
-    description: 'vfddvd',
-    completed: true
-})
+// const t2 = new Task({
+//     description: 'vfddvd',
+//     completed: true
+// })
 
-t2.save()
-.then(task => {
-    console.log(task)
-}).catch(error => {
-    console.log(error)
-})
+// t2.save()
+// .then(task => {
+//     console.log(task)
+// }).catch(error => {
+//     console.log(error)
+// })
 
 // const User = mongoose.model('User', {
 //     name: {
