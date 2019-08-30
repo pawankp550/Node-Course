@@ -4,7 +4,8 @@ mongoose.connect('mongodb+srv://User:Mongo@12345@cluster0-d2yun.mongodb.net/test
 {
     useNewUrlParser: true,
     useCreateIndex: true,
-    dbName: 'Task-Manager-Api'
+    dbName: 'Task-Manager-Api',
+    useFindAndModify: false
 })
 
 // const Task = mongoose.model('task', {
