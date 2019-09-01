@@ -14,6 +14,17 @@ router.post('/users', async (req, res) => {
     }
 })
 
+// login user endpoint
+router.post('/users/login', async (req, res) => {
+    try{
+        const User = await user.findByCredentials(req.body)
+        res.status(200).send(User)
+    }
+    catch(e){
+        res.status(400).send(e)
+    }
+})
+
 // get users endpoint
 router.get('/users', async (req, res) => {
 
@@ -56,7 +67,11 @@ router.patch('/users/:id', async (req, res) => {
     }
 
     try{
-        const User = await user.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true })
+        //const User = await user.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true })
+        const User = await user.findById(_id)
+        updates.forEach(update => User[update] = req.body[update])
+        await User.save()
+
         if(!User){
             return res.status(404).send('no user found with this id')
         }
