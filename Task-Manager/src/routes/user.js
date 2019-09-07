@@ -1,13 +1,17 @@
 const express = require('express')
 const user = require('../models/users')
 const router = express.Router()
+const auth = require('../middleware/auth')
 
 // create user endpoint
 router.post('/users', async (req, res) => {
     const User = new user(req.body)
+
     try{
         const createdUser = await User.save()
-        res.status(201).send(createdUser)
+        const token = await createdUser.createWebToken()
+        //const userToReturn = createdUser.publicProfile()
+        res.status(201).send({ createdUser, token })
     }
     catch (e) {
         res.status(400).send(e)
@@ -18,23 +22,46 @@ router.post('/users', async (req, res) => {
 router.post('/users/login', async (req, res) => {
     try{
         const User = await user.findByCredentials(req.body)
-        res.status(200).send(User)
+        const token = await User.createWebToken()
+        res.status(200).send({ User, token })
     }
-    catch(e){
+    catch (e) {
         res.status(400).send(e)
     }
 })
 
-// get users endpoint
-router.get('/users', async (req, res) => {
-
+// logout user endpoint
+router.post('/users/logout', auth, async (req, res) => {
     try{
-        const users = await user.find({})
-        res.send(users)
+        token = req.token
+        req.user.tokens = req.user.token.filter(token => {
+            return toten.token !== token
+        })
+
+        await req.user.save()
     }
-    catch(e){
-        res.status(500).send()
+    catch (e) {
+           res.status(500).send()
     }
+})
+
+// logout all endpoint
+router.post('/users/logoutAll', auth, async (req, res) => {
+    try{
+        console.log(req.user.tokens)
+        req.user.tokens = []
+        console.log(req.user.tokens)
+        await req.user.save()
+        res.send()
+    }
+    catch (e) {
+           res.status(500).send()
+    }
+})
+
+// get users endpoint
+router.get('/users/me', auth, async (req, res) => {
+    res.send(req.user)
 })
 
 // find user by id endpoint

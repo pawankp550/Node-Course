@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const validator = require('validator')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 const userSchema = new Schema({
     name: {
@@ -40,16 +41,55 @@ const userSchema = new Schema({
                 throw new Error('Password must not contain the string "password"')
             }
         }
-    }
+    },
+    tokens: [{
+        token:{
+            type: String,
+            required: true
+        }
+    }]
 })
 
+//Instance method for sending necessary data back
+userSchema.methods.toJSON = function () {
+    const user = this
+    const userObject = user.toObject()
+
+    delete userObject.password
+    delete userObject.tokens
+
+    return userObject
+}
+
+// userSchema.methods.publicProfile = function () {
+//     const user = this
+//     const userObject = user.toObject()
+
+//     delete userObject.password
+//     delete userObject.tokens
+
+//     return userObject
+// }
+
+// Instance method for adding JWT in user details
+userSchema.methods.createWebToken = async function () {
+    const user = this
+    const token = jwt.sign({ _id: user._id.toString() }, 'thisismycourse')
+    console.log(token)
+    user.tokens = user.tokens.concat({ token })
+    await user.save()
+    return token
+}
+
+// Schema method for checking passwordd for login
 userSchema.statics.findByCredentials = async ({email, password}) => {
+    console.log('in findByCredentials')
     const user = await User.findOne({ email })
     if(!user){
         throw new Error('id not present')
     }
-    const isMatch = await bcrypt.compare(user.password, password)
-
+    const isMatch = await bcrypt.compare(password, user.password)
+    console.log(isMatch)
     if(!isMatch){
         throw new Error('login error')
     }

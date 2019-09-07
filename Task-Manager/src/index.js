@@ -8,6 +8,11 @@ const taskRouter = require('./routes/task')
 
 const port = process.env.port || 3000
 
+// no service available
+// app.use((req, res, next) => {
+//     res.status(503).send('the service is in maintainance mode. Please try again in some time')
+// })
+
 // convert json to object
 app.use(express.json())
 
