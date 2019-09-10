@@ -5,6 +5,7 @@ const auth = async (req, res, next) => {
     console.log('in middle')
     try{
         const token = req.header('Authorization')
+        console.log('Newwwwwwwwwww'+token)
         const decodedToken = jwt.verify(token, 'thisismycourse')
         const user = await User.findOne({ _id: decodedToken._id, 'tokens.token': token })
 

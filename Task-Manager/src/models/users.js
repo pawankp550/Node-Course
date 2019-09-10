@@ -3,6 +3,7 @@ const Schema = mongoose.Schema
 const validator = require('validator')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const Task = require('../models/tasks')
 
 const userSchema = new Schema({
     name: {
@@ -97,12 +98,20 @@ userSchema.statics.findByCredentials = async ({email, password}) => {
     return user
 }
 
+// hash the password before saving
 userSchema.pre('save', async function (next) {
     const user = this
     if(user.isModified('password')){
         user.password = await bcrypt.hash(user.password, 8)
     }
 
+    next()
+})
+
+// delete password after user is deleted
+userSchema.pre('remove', async function (next) {
+    const user = this
+    await Task.deleteMany({ owner: user._id })
     next()
 })
 
